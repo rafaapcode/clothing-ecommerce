@@ -1,0 +1,20 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Open Sans Condensed", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+  transition: color .2s ease-in-out;
+  &:hover {
+    color: gray;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}

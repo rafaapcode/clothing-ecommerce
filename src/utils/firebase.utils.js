@@ -1,0 +1,47 @@
+import { initializeApp } from "firebase/app";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect } from "firebase/auth";
+import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCeAVq2AoFijBgB7xbCmvYQl_3Z4z_Zpvk",
+  authDomain: "ecommer-crwn.firebaseapp.com",
+  projectId: "ecommer-crwn",
+  storageBucket: "ecommer-crwn.appspot.com",
+  messagingSenderId: "491518192721",
+  appId: "1:491518192721:web:aac3c3461a1e17969f9c70"
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+
+const provider = new GoogleAuthProvider();
+provider.setCustomParameters({
+  prompt: "select_account"
+});
+
+export const auth = getAuth();
+export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
+export const signInWithGoogleRedirect = () => signInWithRedirect(auth, provider);
+
+export const db = getFirestore();
+
+export const createUserDocumentFromAuth = async (userAuth) => {
+  const userDocRef = doc(db, "users", userAuth.uid);
+
+  const userSnapshot = await getDoc(userDocRef);
+  if(!userSnapshot.exists()) {
+    const {displayName , email} = userAuth;
+    const createdAt = new Date();
+
+    try {
+      await setDoc(userDocRef, {
+        displayName, 
+        email,
+        createdAt
+      });
+    } catch (error) {
+      console.log("Erro to create the user: ", error.message);
+    }
+  }
+
+  return userDocRef;
+}
